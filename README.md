@@ -21,6 +21,9 @@ I2C通信を使用するヌンチャク型コントローラをマウス代わ�
 
 ## Usage
 
+1. PCに[デバイスドライバ](https://github.com/digistump/DigistumpArduino/blob/master/tools/micronucleus-2.0a4-win.zip?raw=true)をインストールします  
+　※ダウンロードしたZIPファイルを解凍し、32ビット環境なら「DPinst.exe」、64ビット環境なら「DPinst64.exe」を実行します。    
+
 1. コントローラとdigisparkを結線します（以下の図を参照）  
 <img src="./Digispark&Nunchuck.png" />
 
