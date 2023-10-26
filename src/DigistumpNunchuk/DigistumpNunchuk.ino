@@ -18,8 +18,6 @@
 
 static int initXposi = 0;
 static int initYposi = 0;
-static int maxXposi = 0;
-static int maxYposi = 0;
 static int intervalCount = 0;
 static bool disableCount = false;
 static bool disableScroll = false;
@@ -34,18 +32,8 @@ void loop() {
   int     y      = 0;
   uint8_t button = 0;
   if( nunchuckIsAvailable(&x, &y, &button) ){
-    if(x - initXposi > maxXposi) {
-      maxXposi = x - initXposi;
-    }
-    else if(x - initXposi < -maxXposi) {
-      maxXposi = -(x - initXposi);
-    }
-    if(y - initYposi > maxYposi) {
-      maxYposi = y - initYposi;
-    }
-    else if(y - initYposi < -maxYposi) {
-      maxYposi = -(y - initYposi);
-    }
+    int xPosi = x - initXposi;
+    int yPosi = y - initYposi;
 
     if(button & NUNCHK_C_MASK) { // c button
       if(intervalCount >= 1000/10) {
@@ -56,29 +44,24 @@ void loop() {
         DigiMouse.delay(10);
       }
       else {
-        if(x - initXposi > POSITION_MARGIN || x - initXposi < -POSITION_MARGIN
-        || y - initYposi > POSITION_MARGIN || y - initYposi < -POSITION_MARGIN) {
+        if(abs(xPosi) > POSITION_MARGIN || abs(yPosi) > POSITION_MARGIN) {
           intervalCount = 0;
           disableCount = true;
-          if(y - initYposi > POSITION_MARGIN && !disableScroll) {
+          if(yPosi > POSITION_MARGIN && !disableScroll) {
             DigiMouse.scrollV(1);
           }
-          else if(y - initYposi < -POSITION_MARGIN && !disableScroll) {
+          else if(yPosi < -POSITION_MARGIN && !disableScroll) {
             DigiMouse.scrollV(-1);
           }
-          int delay1 = y - initYposi;
-          if(delay1 < 0) delay1 *= -1;
-          delay1 = (maxYposi - delay1)*100/maxYposi;
-          if(x - initXposi > POSITION_MARGIN && !disableScroll) {
+          int delay1 = max(-3 * abs(yPosi) + 240, 0);
+          if(xPosi > POSITION_MARGIN && !disableScroll) {
             DigiMouse.scrollH(1);
           }
-          else if(x - initXposi < -POSITION_MARGIN && !disableScroll) {
+          else if(xPosi < -POSITION_MARGIN && !disableScroll) {
             DigiMouse.scrollH(-1);
           }
-          int delay2 = x - initXposi;
-          if(delay2 < 0) delay2 *= -1;
-          delay2 = (maxXposi - delay2)*100/maxXposi;
-          DigiMouse.delay(delay1 < delay2 ? delay1 : delay2);
+          int delay2 = max(-3 * abs(xPosi) + 240, 0);
+          DigiMouse.delay(min(delay1, delay2));
         }
         else if(!disableCount) {
           intervalCount++;
@@ -86,8 +69,8 @@ void loop() {
       }
     }
     else {
-      DigiMouse.moveX((signed char)(x - initXposi)*50/127); // stick position x
-      DigiMouse.moveY(-(signed char)(y - initYposi)*50/127); // stick position y
+      DigiMouse.moveX((signed char)(xPosi)*50/127); // stick position x
+      DigiMouse.moveY(-(signed char)(yPosi)*50/127); // stick position y
       intervalCount = 0;
       disableCount = false;
       disableScroll = false;

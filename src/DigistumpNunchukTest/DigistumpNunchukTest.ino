@@ -18,8 +18,8 @@
 
 static int initXposi = 0;
 static int initYposi = 0;
-static int maxXposi = 0;
-static int maxYposi = 0;
+static int maxXposi = 1;
+static int maxYposi = 1;
 
 void setup() {
   initNunchuk();
@@ -31,32 +31,28 @@ void loop() {
   uint8_t button = 0;
   DigiKeyboard.sendKeyStroke(0);
   if( nunchuckIsAvailable(&x, &y, &button) ){
-    if(x - initXposi > maxXposi) {
-      maxXposi = x - initXposi;
+    int xPosi = x - initXposi;
+    int yPosi = y - initYposi;
+    if(abs(xPosi) > maxXposi) {
+      maxXposi = abs(xPosi);
     }
-    else if(x - initXposi < -maxXposi) {
-      maxXposi = -(x - initXposi);
+    if(abs(yPosi) > maxYposi) {
+      maxYposi = abs(yPosi);
     }
-    if(y - initYposi > maxYposi) {
-      maxYposi = y - initYposi;
-    }
-    else if(y - initYposi < -maxYposi) {
-      maxYposi = -(y - initYposi);
-    }
-    DigiKeyboard.print("x: ");
-    DigiKeyboard.print(x - initXposi);
-    DigiKeyboard.print(", y: ");
-    DigiKeyboard.print(y - initYposi);
-    DigiKeyboard.print(", xmax: ");
-    DigiKeyboard.print(maxXposi);
-    DigiKeyboard.print(", ymax: ");
-    DigiKeyboard.print(maxYposi);
-    int delay = y - initYposi;
-    if(delay < 0) delay *= -1;
-    delay = maxYposi - delay;
+    // DigiKeyboard.print("rawX: ,");
+    // DigiKeyboard.print(x);
+    // DigiKeyboard.print("x: ");
+    // DigiKeyboard.print(xPosi);
+    DigiKeyboard.print("y: ");
+    DigiKeyboard.print(yPosi);
+    // DigiKeyboard.print(", xmax: ");
+    // DigiKeyboard.print(maxXposi);
+    // DigiKeyboard.print(", ymax: ");
+    // DigiKeyboard.print(maxYposi);
+    int delay = max(-3 * abs(yPosi) + 240, 0);
     DigiKeyboard.print(", delay: ");
     DigiKeyboard.println(delay);
-    DigiKeyboard.delay(2000);
+    DigiKeyboard.delay(500);
   }
 }
 
