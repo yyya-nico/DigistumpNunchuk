@@ -14,7 +14,7 @@
 #define COMPLETE_COUNT (5)
 #define NUNCHK_Z_MASK 0x01
 #define NUNCHK_C_MASK 0x02
-#define POSITION_MARGIN 5
+#define POSITION_MARGIN 3
 
 static int initXposi = 0;
 static int initYposi = 0;
@@ -69,8 +69,10 @@ void loop() {
       }
     }
     else {
-      DigiMouse.moveX((signed char)(xPosi)*50/127); // stick position x
-      DigiMouse.moveY(-(signed char)(yPosi)*50/127); // stick position y
+      if(abs(xPosi) > POSITION_MARGIN || abs(yPosi) > POSITION_MARGIN) {
+        DigiMouse.moveX((signed char)(xPosi)*50/127); // stick position x
+        DigiMouse.moveY(-(signed char)(yPosi)*50/127); // stick position y
+      }
       intervalCount = 0;
       disableCount = false;
       disableScroll = false;
@@ -92,7 +94,6 @@ void loop() {
     DigiMouse.setButtons(0); //unclick all
     DigiMouse.delay(10);
   }
-  
 }
 
 void initNunchuk(void) {
