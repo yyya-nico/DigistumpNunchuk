@@ -47,18 +47,12 @@ void loop() {
         if(abs(xPosi) > POSITION_MARGIN || abs(yPosi) > POSITION_MARGIN) {
           intervalCount = 0;
           disableCount = true;
-          if(yPosi > POSITION_MARGIN && !disableScroll) {
-            DigiMouse.scrollV(1);
-          }
-          else if(yPosi < -POSITION_MARGIN && !disableScroll) {
-            DigiMouse.scrollV(-1);
+          if(abs(yPosi) > POSITION_MARGIN && !disableScroll) {
+            DigiMouse.scrollV((int)(float)(yPosi * 0.07317 + 0.70732));
           }
           int delay1 = max(-3 * abs(yPosi) + 240, 0);
-          if(xPosi > POSITION_MARGIN && !disableScroll) {
-            DigiMouse.scrollH(1);
-          }
-          else if(xPosi < -POSITION_MARGIN && !disableScroll) {
-            DigiMouse.scrollH(-1);
+          if(abs(xPosi) > POSITION_MARGIN && !disableScroll) {
+            DigiMouse.scrollH((int)(float)(xPosi * 0.07317 + 0.70732));
           }
           int delay2 = max(-3 * abs(xPosi) + 240, 0);
           DigiMouse.delay(min(delay1, delay2));

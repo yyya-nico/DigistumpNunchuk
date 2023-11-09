@@ -59,7 +59,7 @@ static unsigned long last_report_time = 0;
 
 char usb_hasCommed = 0;
 
-const PROGMEM unsigned char mouse_usbHidReportDescriptor[90] = { /* USB report descriptor */
+const PROGMEM unsigned char mouse_usbHidReportDescriptor[120] = { /* USB report descriptor */
 		0x05, 0x01,        // USAGE_PAGE (Generic Desktop)
 		0x09, 0x02,        // USAGE (Mouse)
 		0xa1, 0x01,        // COLLECTION (Application)
@@ -91,6 +91,15 @@ const PROGMEM unsigned char mouse_usbHidReportDescriptor[90] = { /* USB report d
 		0x81, 0x06,        //       INPUT (Data,Var,Rel)
 		0xa1, 0x02,        //       COLLECTION (Logical)
 		// ------------------------------  Vertical wheel res multiplier
+		0x09, 0x48,        //         USAGE (Resolution Multiplier)
+		0x15, 0x00,        //         LOGICAL_MINIMUM (0)
+		0x25, 0x01,        //         LOGICAL_MAXIMUM (1)
+		0x35, 0x01,        //         PHYSICAL_MINIMUM (1)
+		0x45, 0x08,        //         PHYSICAL_MAXIMUM (8)
+		0x75, 0x02,        //         REPORT_SIZE (2)
+		0x95, 0x01,        //         REPORT_COUNT (1)
+		0xa4,              //         PUSH
+		0xb1, 0x02,        //         FEATURE (Data,Var,Abs)
 		// ------------------------------  Vertical wheel
 		0x09, 0x38,        //         USAGE (Wheel)
 		0x15, 0x81,        //         LOGICAL_MINIMUM (-127)
@@ -103,7 +112,14 @@ const PROGMEM unsigned char mouse_usbHidReportDescriptor[90] = { /* USB report d
 		0xc0,              //       END_COLLECTION
 		0xa1, 0x02,        //       COLLECTION (Logical)
 		// ------------------------------  Horizontal wheel res multiplier
+		0x09, 0x48,        //         USAGE (Resolution Multiplier)
+		0xb4,              //         POP
+		0xb1, 0x02,        //         FEATURE (Data,Var,Abs)
 		// ------------------------------  Padding for Feature report
+		0x35, 0x00,        //         PHYSICAL_MINIMUM (0)        - reset physical
+		0x45, 0x00,        //         PHYSICAL_MAXIMUM (0)
+		0x75, 0x04,        //         REPORT_SIZE (4)
+		0xb1, 0x03,        //         FEATURE (Cnst,Var,Abs)
 		// ------------------------------  Horizontal wheel
 		0x05, 0x0c,        //         USAGE_PAGE (Consumer Devices)
 		0x0a, 0x38, 0x02,  //         USAGE (AC Pan)
